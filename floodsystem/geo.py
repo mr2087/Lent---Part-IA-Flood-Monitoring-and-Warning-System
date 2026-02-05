@@ -1,6 +1,8 @@
-from station import MonitoringStation
+from .station import MonitoringStation
 
 from math import sin, cos, asin, sqrt
+
+from .utils import sorted_by_key
 
 # better to use this type for all "coordinate"-like objects for the sake of clarity
 #   should always be given in the form (latitude, longitude)
@@ -38,6 +40,26 @@ def get_distance(
 
     return distance
 
+# for task 1B
+def stations_by_distance(
+    stations : list[MonitoringStation], 
+    p : Coordinate):
+    # Build a list of (station_object, distance_from_p) tuples 
+    result =[]
+    
+    # Loop through every MonitoringStation object in the input list
+    for station in stations:
+        # Each station has a .coord attribute that can be used in this function
+        # Compute the distance between the station and coordinate p
+        distance = get_distance(p, station.coord)
+        # Store pair (station_object, distance_from_p) by adding it to the end of the list
+        result.append((station, distance))
+    
+    # Sort the list by the distance_from_p, which is the second element of each tuple
+    result = sorted_by_key(result, 1)
+
+    return result
+
 # for task 1C
 def get_stations_within_radius(
     stations : list[MonitoringStation],
@@ -59,6 +81,10 @@ def get_stations_within_radius(
             stations_within_radius.append(station)
 
     return stations_within_radius
+
+# for task 1D
+def rivers_with_station(
+        stations):
 
 
 # for task 1E
