@@ -3,11 +3,11 @@ from station import MonitoringStation
 from math import sin, cos, asin, sqrt
 
 # better to use this type for all "coordinate"-like objects for the sake of clarity
-#   should always be given in the form (latitude, longitude)
+#   must always be given in the form (latitude, longitude)
 Coordinate = tuple
 
 def hav(theta : float) -> float:
-    """Implements the explicit haversine formula `hav x = sin^2(x/2)`."""
+    """Implementation of the haversine `hav x = sin^2(x/2)`."""
 
     return (sin(theta / 2)) ** 2
 
@@ -16,11 +16,16 @@ def get_distance(
     coord_1 : Coordinate,
     coord_2 : Coordinate,
 ) -> float:
-    """Given two coordinates in latitude-longitude form, returns the distance 
+    """Given two `Coordinates` in latitude-longitude form, returns the distance 
     between the two coordinates on Earth in metres using the haversine.
-    
+
+    **Note:** This implementation uses duck typing for the two input parameters; 
+    as such, there is no internal verification. Hence, improperly formatted 
+    coordinate values may return incorrect or nonsensical values!  
+
+    @param coord_1: The first `Coordinate`.
+    @param coord_2: The second `Coordinate`.
     """
-    # add defense later ... 
 
     # calculate haversine of coordinates
     delta_latitude  : float = coord_2[0] - coord_1[0]
@@ -32,19 +37,31 @@ def get_distance(
     # get angle from haversine
     central_angle : float = 2 * asin(sqrt(haversine))
 
-    # get distance with formula `d = R*angle`
-    earth_radius : float = 6371 * 1000          # given in metres
+    # get distance with formula `d = R*angle`, R in metres
+    # we approximate earth as perfect sphere
+    earth_radius : float = 6371 * 1000
     distance : float = earth_radius * central_angle
 
     return distance
 
-# for task 1C
-def get_stations_within_radius(
+
+def stations_within_radius(
     stations : list[MonitoringStation],
     centre : Coordinate,
     r : float
 ) -> list[MonitoringStation]:
-    # duck type centre and r
+    """Implementation of the main logic for Task 1C. 
+    
+    Given the list of stations, a centre coordinate and radius, returns a list
+    of stations which are closer to the centre than the radius. All coordinates
+    are expected in `(latitude, longitude)` format. 
+    Distances between two points are calculated with the haversine formula.
+
+    @param stations: The `list` of `MonitoringStations` on which the stations within the given radius are to be returned.
+    @param centre:   The `tuple` in `Coordinate` format which represents the latitude and longitude of the central point.
+    @param r:        The `float` which gives the maximum filtering radius.
+    """
+    # defensive programming ?
 
     stations_within_radius : list[MonitoringStation] = []
 
@@ -52,6 +69,7 @@ def get_stations_within_radius(
     for station in stations:
         station_centre = station.coord
 
+        # uses haversine formula
         distance = get_distance(centre, station_centre)
 
         # check if distance is less than upper bound r
@@ -66,16 +84,34 @@ def rivers_by_station_number(
     stations : list[MonitoringStation], 
     N : int
 ) -> list[tuple[str, int]]:
+    """Implementation of the main logic for Task 1E.
+    
+    Given a list of stations, and a limit `N`, returns the `N` rivers with the 
+    most associated stations. Return type is a `list` of a `tuple`, where the 
+    inner `tuple` should be seen in the form `(river name, number of stations)`.
+    
+    If there exists more than one river with the same number of stations at 
+    the `N`th position, then this implementation returns all sucn rivers. 
+    Note therefore that the length of the returned `list` must not be `N`, 
+    it may be smaller (if number of rivers is less than `N`) or larger 
+    (if the edge case described above occurs).
+
+    @param stations: The `list` of `MonitoringStations` from which the river station data is to be determined.
+    @param N: An `int` which describes the upper bound of rivers to be returned.
+    """
     # count rivers in stations
     river_station_count : dict = {}
 
     for station in stations:
         station_river = station.river
 
+        # river already present in `river_station_count` check
         if station_river not in river_station_count.keys():
-            river_station_count[station_river] = 1
+            # river is not registered yet
+            river_station_count[station_river] = 1      
         else:
-            river_station_count[station_river] += 1
+            # river is already registered
+            river_station_count[station_river] += 1     
 
     # sort river station count by number of stations descending
     river_station_count = {station : count 
@@ -86,17 +122,20 @@ def rivers_by_station_number(
                                reverse=True)
                           }
     river_count_data : list = river_station_count.items()
-    
-    # return the appropriate number of rivers
+
     i = 0
+    # edge cases on the number of rivers
     if N > len(river_count_data):
         return river_count_data
     elif N == 0:
         return []
-    else:
-        rivers_station_number = []
 
-        # here we will not run out of river data
+    # here we will not run out of river data
+    else:
+        rivers_station_number : list = []
+
+        # terminates if upper bound is reached and 
+        # there are no ties in station count
         while i < (N-1) or \
               river_count_data[i][1] == river_count_data[i+1][1]:
             
