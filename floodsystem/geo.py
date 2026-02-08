@@ -1,18 +1,18 @@
-from station import MonitoringStation
+from .station import MonitoringStation
 
-from math import sin, cos, asin, sqrt
+from math import sin, cos, asin, sqrt, pi
 
 # better to use this type for all "coordinate"-like objects for the sake of clarity
 #   must always be given in the form (latitude, longitude)
 Coordinate = tuple
 
-def hav(theta : float) -> float:
+def _hav(theta : float) -> float:
     """Implementation of the haversine `hav x = sin^2(x/2)`."""
 
     return (sin(theta / 2)) ** 2
 
 
-def get_distance(
+def _get_distance(
     coord_1 : Coordinate,
     coord_2 : Coordinate,
 ) -> float:
@@ -26,12 +26,17 @@ def get_distance(
     @param coord_1: The first `Coordinate`.
     @param coord_2: The second `Coordinate`.
     """
+    # convert into radians
+    lat1 = coord_1[0] * pi/180
+    lng1 = coord_1[1] * pi/180
+    lat2 = coord_2[0] * pi/180
+    lng2 = coord_2[1] * pi/180
 
     # calculate haversine of coordinates
-    delta_latitude  : float = coord_2[0] - coord_1[0]
-    delta_longitude : float = coord_2[1] - coord_1[0]
+    delta_latitude  : float = lat2 - lat1
+    delta_longitude : float = lng2 - lng1
 
-    haversine : float = hav(delta_latitude) + cos(coord_2[0])*cos(coord_1[0])*hav(delta_longitude)
+    haversine : float = _hav(delta_latitude) + cos(lat1)*cos(lat2)*_hav(delta_longitude)
     assert 0 <= haversine <= 1
     
     # get angle from haversine
@@ -70,7 +75,7 @@ def stations_within_radius(
         station_centre = station.coord
 
         # uses haversine formula
-        distance = get_distance(centre, station_centre)
+        distance = _get_distance(centre, station_centre)
 
         # check if distance is less than upper bound r
         if distance <= r:
