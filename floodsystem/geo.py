@@ -1,4 +1,6 @@
 from .station import MonitoringStation
+from .debug import Debug
+debug_util = Debug('log/a.txt')
 
 from math import sin, cos, asin, sqrt, pi
 
@@ -66,7 +68,19 @@ def stations_within_radius(
     @param centre:   The `tuple` in `Coordinate` format which represents the latitude and longitude of the central point.
     @param r:        The `float` which gives the maximum filtering radius.
     """
-    # defensive programming ?
+    LATITUDE_MAX : float = +90
+    LATITUDE_MIN : float = -90
+
+    # check that all stations are indeed MonitoringStations
+    if not all([isinstance(station, MonitoringStation) for station in stations]):
+        raise TypeError("[STAT::WITHIN::RADIUS] Parameter `station` improperly formatted: not all station elements are MonitoringStation")
+    # check that centre coordinates are within bounds
+    if not (LATITUDE_MIN <= centre[1] <= LATITUDE_MAX):
+        debug_util.warn("geo::stations_within_radius", "Latitude parameter of centre not within expected interval [-90, +90].")
+    if not all([LATITUDE_MIN <= station.coord[1] <= LATITUDE_MAX for station in stations]):
+        debug_util.warn("geo::stations_within_radius", "Latitude parameter of station not within expected interval [-90, +90].")
+    if not (isinstance(r, float) or isinstance(r, int)):
+        raise TypeError
 
     stations_within_radius : list[MonitoringStation] = []
 
@@ -126,7 +140,8 @@ def rivers_by_station_number(
                                key=lambda x : x[1],
                                reverse=True)
                           }
-    river_count_data : list = river_station_count.items()
+    river_count_data : list = list(river_station_count.items())
+    print(river_count_data)
 
     i = 0
     # edge cases on the number of rivers
@@ -141,9 +156,10 @@ def rivers_by_station_number(
 
         # terminates if upper bound is reached and 
         # there are no ties in station count
-        while i < (N-1) or \
-              river_count_data[i][1] == river_count_data[i+1][1]:
+        while i < N or \
+              river_count_data[i][1] == river_count_data[i-1][1]:
             
             rivers_station_number.append(river_count_data[i])
+            i += 1
     
         return rivers_station_number
