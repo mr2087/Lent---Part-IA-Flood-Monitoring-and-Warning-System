@@ -4,6 +4,8 @@ debug_util = Debug('log/a.txt')
 
 from math import sin, cos, asin, sqrt, pi
 
+from .utils import sorted_by_key
+
 # better to use this type for all "coordinate"-like objects for the sake of clarity
 #   must always be given in the form (latitude, longitude)
 Coordinate = tuple
@@ -51,8 +53,28 @@ def _get_distance(
 
     return distance
 
+# for task 1B
+def stations_by_distance(
+    stations: list[MonitoringStation], 
+    p : Coordinate):
+    # Build a list of (station_object, distance_from_p) tuples 
+    result =[]
+    
+    # Loop through every MonitoringStation object in the input list
+    for station in stations:
+        # Each station has a .coord attribute that can be used in this function
+        # Compute the distance between the station and coordinate p
+        distance = get_distance(p, station.coord)
+        # Store pair (station_object, distance_from_p) by adding it to the end of the list
+        result.append((station, distance))
+    
+    # Sort the list by the distance_from_p, which is the second element of each tuple
+    result = sorted_by_key(result, 1)
 
-def stations_within_radius(
+    return result
+
+# for task 1C
+def get_stations_within_radius(
     stations : list[MonitoringStation],
     centre : Coordinate,
     r : float
@@ -97,6 +119,34 @@ def stations_within_radius(
 
     return stations_within_radius
 
+# for task 1D
+def rivers_with_station(
+    stations: list[MonitoringStation]):
+    # Build a set to fill with the names of rivers with a monitoring station
+    # A set was chosen because a set contains no duplicate elements
+    result = set()
+    
+    # Loop through every MonitoringStation object in the input list
+    for station in stations:
+        # Add every river with a monitoring station to the result set
+        result.add(station.river)
+    return result
+
+def stations_by_river(
+    stations: list[MonitoringStation]):
+    # Create an empty dictionary
+    dictionary = {}
+    # Loop through each station to get rivers
+    for station in stations:
+        river = station.river
+
+        # If river not seen before (not in dictionary), create a new list
+        if river not in dictionary:
+            dictionary[river] = []
+        # Add station to the list for this river
+            dictionary[river].append(station)
+    
+    return dictionary
 
 # for task 1E
 def rivers_by_station_number(
