@@ -7,10 +7,13 @@ def main():
     stations : list = build_station_list(use_cache = True)
 
     # first test: N = 9
-    rivers_with_stations : list = rivers_by_station_number(stations, N=9)
+    rivers_with_stations : list = rivers_by_station_number(stations, N=17)
 
     print(" ======= [TASK 1E: Representative Output] ======= ")
     print(rivers_with_stations)
+
+def test_E1(stations : list) -> None:
+    """Testing function. Check if """
 
 if __name__ == '__main__':
     main()
