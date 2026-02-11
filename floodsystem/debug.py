@@ -13,4 +13,16 @@ class Debug:
         with open(self.log_file, 'a') as lf:
             lf.write(''.join([wt, '\n']))
 
+    def error(self, fsrc : str, error : Exception, *msgs) -> None:
+        wt = ''.join([f"{str(self.t)} -- {fsrc} -- [FATAL|{str(error)}]", *msgs])
+
+        with open(self.log_file, 'a') as lf:
+            lf.write(''.join([wt, '\n']))
+        raise error(wt)
     
+    def log(self, fsrc : str, *msgs) -> None:
+        wt = ''.join([f"{str(self.t)} -- {fsrc} -- [LOG]", *msgs])
+
+        print(wt)
+        with open(self.log_file, 'a') as lf:
+            lf.write(wt + '\n')

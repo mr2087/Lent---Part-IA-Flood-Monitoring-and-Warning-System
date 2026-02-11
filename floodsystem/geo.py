@@ -41,7 +41,7 @@ def _get_distance(
     delta_longitude : float = lng2 - lng1
 
     haversine : float = _hav(delta_latitude) + cos(lat1)*cos(lat2)*_hav(delta_longitude)
-    assert 0 <= haversine <= 1
+    assert 0 <= haversine <= 1 # check for floating-point error
     
     # get angle from haversine
     central_angle : float = 2 * asin(sqrt(haversine))
@@ -64,7 +64,7 @@ def stations_by_distance(
     for station in stations:
         # Each station has a .coord attribute that can be used in this function
         # Compute the distance between the station and coordinate p
-        distance = get_distance(p, station.coord)
+        distance = _get_distance(p, station.coord)
         # Store pair (station_object, distance_from_p) by adding it to the end of the list
         result.append((station, distance))
     
@@ -74,7 +74,7 @@ def stations_by_distance(
     return result
 
 # for task 1C
-def get_stations_within_radius(
+def stations_within_radius(
     stations : list[MonitoringStation],
     centre : Coordinate,
     r : float
@@ -93,16 +93,11 @@ def get_stations_within_radius(
     LATITUDE_MAX : float = +90
     LATITUDE_MIN : float = -90
 
-    # check that all stations are indeed MonitoringStations
-    if not all([isinstance(station, MonitoringStation) for station in stations]):
-        raise TypeError("[STAT::WITHIN::RADIUS] Parameter `station` improperly formatted: not all station elements are MonitoringStation")
     # check that centre coordinates are within bounds
     if not (LATITUDE_MIN <= centre[1] <= LATITUDE_MAX):
-        debug_util.warn("geo::stations_within_radius", "Latitude parameter of centre not within expected interval [-90, +90].")
+        debug_util.error("geo::stations_within_radius", ValueError, "Latitude parameter of centre not within expected interval [-90, +90].")
     if not all([LATITUDE_MIN <= station.coord[1] <= LATITUDE_MAX for station in stations]):
-        debug_util.warn("geo::stations_within_radius", "Latitude parameter of station not within expected interval [-90, +90].")
-    if not (isinstance(r, float) or isinstance(r, int)):
-        raise TypeError
+        debug_util.error("geo::stations_within_radius", ValueError, "Latitude parameter of station not within expected interval [-90, +90].")
 
     stations_within_radius : list[MonitoringStation] = []
 

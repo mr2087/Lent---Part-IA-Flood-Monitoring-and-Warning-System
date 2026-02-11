@@ -16,6 +16,11 @@ def dem_program_d1():
     print("Number of rivers with at least one monitoring station", len(rivers))
     print("First 10 rivers:", first_10)
     
+def test_1D1():
+    stations = build_station_list()
+
+    # check function
+    rivers = rivers_with_station(stations)
 
 def dem_program_d2():
     # Build the list of MonitoringStation objects that will be input to my function
@@ -39,6 +44,17 @@ def dem_program_d2():
         print(f"Stations on {river}")
         print(station_names)   
        
+def task_1D2():
+    stations = build_station_list()
+
+    # test function
+    rivers : dict = stations_by_river()
+
+    # make sure all stations have been accounted for
+    tot_stations : int = 0
+    for bound_stations in rivers.values():
+        tot_stations += len(bound_stations)
+    assert tot_stations == len(stations)
 
 if __name__ == "__main__":
     dem_program_d1()
