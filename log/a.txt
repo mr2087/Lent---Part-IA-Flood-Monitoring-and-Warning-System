@@ -1,2 +1,8 @@
 2026-02-09 10:03:38.443190 -- geo::stations_within_radius -- [WARNING]Latitude parameter of station not within expected interval [-90, +90].
 2026-02-09 10:03:58.112959 -- geo::stations_within_radius -- [WARNING]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:28:27.608559 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:29:29.079395 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:29:42.626024 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:30:28.712664 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:32:19.905746 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
+2026-02-11 16:32:36.482936 -- geo::stations_within_radius -- [FATAL|<class 'ValueError'>]Latitude parameter of station not within expected interval [-90, +90].
