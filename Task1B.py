@@ -1,3 +1,5 @@
+import pytest
+
 from floodsystem.stationdata import build_station_list
 # Import my function
 from floodsystem.geo import stations_by_distance
@@ -20,6 +22,13 @@ def dem_program():
     print("Furthest 10 stations:")
     for station, dist in furthest_10:
         print((station.name, station.town, dist))
+
+# PYTEST Unit Tests
+def test_1B1():
+    stations = build_station_list()
+    
+    # test of function
+    stations_distance_sort = stations_by_distance(stations, (52.2053, 0.1218))
     
 if __name__ == "__main__":
     dem_program()

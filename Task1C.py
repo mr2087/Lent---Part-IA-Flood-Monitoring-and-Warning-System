@@ -29,21 +29,27 @@ def main():
 
     print(local_station_names)
 
-def test_2():
+def test_1C1():
+    stations = build_station_list(use_cache = True)
+
+    local_stations = stations_within_radius(stations, (52.2053, 0.1218), 10_000)
+
+    # up to date for current
+    assert len(local_stations) == 9
+
+def test_1C2():
     """PYTEST - Latitude Error Logic"""
     fake_stations = [
             MonitoringStation('---', '---', 'Station A', (54.184923, -5.2848), None, 'River A', 'Town A'), # correct   
             MonitoringStation('---', '---', ['Station B', 'Alt Station B'], (19.583742, -33.1592), None, 'River B', 'Town B'),   # correct, tests return of multiple labels
             MonitoringStation('---', '---', 'Station C', (89.247194, -98.1945), None, 'River C', 'Town C')  # incorrect latitude value
         ]
-
-    fake_local_stations = stations_within_radius(fake_stations, (52.2053, 0.1218), 10_000)
-
+    
     with pytest.raises(ValueError):
-        raise ValueError("asdf")
-        stations_within_radius(fake_stations, (52.2053, 0.1218), 100_000)
+        # code below should error
+        fake_local_stations = stations_within_radius(fake_stations, (52.2053, 0.1218), 10_000)
 
-
+    
 if __name__ == '__main__':
     try:
         debug_flag = bool(sys.argv[1])

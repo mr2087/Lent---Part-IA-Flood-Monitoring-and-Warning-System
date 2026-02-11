@@ -41,7 +41,7 @@ def _get_distance(
     delta_longitude : float = lng2 - lng1
 
     haversine : float = _hav(delta_latitude) + cos(lat1)*cos(lat2)*_hav(delta_longitude)
-    assert 0 <= haversine <= 1
+    assert 0 <= haversine <= 1 # check for floating-point error
     
     # get angle from haversine
     central_angle : float = 2 * asin(sqrt(haversine))
@@ -64,7 +64,7 @@ def stations_by_distance(
     for station in stations:
         # Each station has a .coord attribute that can be used in this function
         # Compute the distance between the station and coordinate p
-        distance = get_distance(p, station.coord)
+        distance = _get_distance(p, station.coord)
         # Store pair (station_object, distance_from_p) by adding it to the end of the list
         result.append((station, distance))
     
