@@ -51,9 +51,4 @@ def test_1C2():
 
     
 if __name__ == '__main__':
-    try:
-        debug_flag = bool(sys.argv[1])
-    except IndexError:
-        debug_flag = False
-
-    main(DEBUG=debug_flag)
+    main()
