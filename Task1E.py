@@ -9,9 +9,9 @@ def main():
     # first test: N = 9
     rivers_with_stations : list = rivers_by_station_number(stations, N=17)
 
-    print(" ======= [TASK 1E: Representative Output] ======= ")
+    print(" ======= [TASK 1E: Output] ======= ")
     print(rivers_with_stations)
-    print(print(_get_distance((90, 0), (-90, 0))))
+    
 
 def test_1E1() -> None:
     """Testing function. Check if """
@@ -24,8 +24,5 @@ def test_1E1() -> None:
     # preliminary check
     assert len(rivers_with_stations) >= 9
     
-def test1E2() -> None:
-    """Second testing function. Check what happens if """
-
 if __name__ == '__main__':
     main()

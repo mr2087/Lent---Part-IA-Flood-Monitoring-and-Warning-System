@@ -186,7 +186,6 @@ def rivers_by_station_number(
                                reverse=True)
                           }
     river_count_data : list = list(river_station_count.items())
-    print(river_count_data)
 
     i = 0
     # edge cases on the number of rivers

@@ -34,8 +34,8 @@ def test_1C1():
 
     local_stations = stations_within_radius(stations, (52.2053, 0.1218), 10_000)
 
-    # up to date for current
-    assert len(local_stations) == 9
+    # up to date: 20260211
+    assert len(local_stations) == 11
 
 def test_1C2():
     """PYTEST - Latitude Error Logic"""
@@ -51,9 +51,4 @@ def test_1C2():
 
     
 if __name__ == '__main__':
-    try:
-        debug_flag = bool(sys.argv[1])
-    except IndexError:
-        debug_flag = False
-
-    main(DEBUG=debug_flag)
+    main()
