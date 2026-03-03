@@ -7,7 +7,8 @@ from floodsystem.analysis import polyfit
 def plot_water_level(station : list, dates : list, levels) -> None:
     # fdates = mdates.date2num(dates)
 
-    fig, ax = plt.subplot()
+    fig = plt.figure()
+    ax = fig.add_subplot()
 
     ax.plot(dates, levels, '.', label="Water level data")
 
@@ -23,6 +24,9 @@ def plot_water_level(station : list, dates : list, levels) -> None:
     plt.legend()
     plt.tight_layout()  # This makes sure plot does not cut off date labels
     plt.show()
+
+def get_water_level_fit(dates, levels, p):
+    return polyfit(dates, levels, p)
 
 def plot_water_level_with_fit(station, dates, levels, p):
 
