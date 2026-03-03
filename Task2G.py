@@ -12,6 +12,8 @@ import numpy as np
 
 import datetime 
 
+from pprint import pprint
+
 def init() -> list[MonitoringStation]:
     stations = build_station_list(use_cache=True)
     update_water_levels(stations)
@@ -47,15 +49,15 @@ def evaluate_flooding(station) -> tuple[float, str]:
         return (None, None)
     
     # calibration factors
-    rwl_factor = 0.05
-    rwl_augment = 0.38
+    rwl_factor = 0.04
+    rwl_augment = 0.36
 
-    short_grad_factor = 0.05 + (0.3 if rwl > 0.85 else 0)
+    short_grad_factor = 0.05 + (0.3 if rwl > 1 else 0)
     print(frwl_long_mag)
     long_grad_factor = abs(frwl_long_mag)*0.1
 
     # score evaluation
-    score = ( ((rwl-0.6) * (rwl_factor + (rwl_augment if rwl > 0.8 else 0))) + 
+    score = ( ((rwl-0.8) * (rwl_factor + (rwl_augment if rwl > 1 else 0))) + 
                 ((frwl_short + (0.70 if rwl > 1.2 else 0)) * short_grad_factor) + 
                 (frwl_long-0.5) * long_grad_factor)
 
@@ -78,14 +80,21 @@ def main() -> None:
     print("initial setup complete")
 
     warning_stations = [station_data[0] for station_data in stations_level_over_threshold(stations, 0.3)]
-    print(f'Testing {len(warning_stations)} higher-risk stations ...\n\n')
+    # print(f'Testing {len(warning_stations)} higher-risk stations ...\n\n')
 
-    for station in stations[340:355]:
+    risk_stations = [station_data[0] for station_data in stations_highest_rel_level(stations, 75)[50:]]
+    risk_towns = []
+
+    for station in risk_stations: # stations[340:355]:
         score, status = evaluate_flooding(station)
+
+        risk_towns.append((station.town, status))
         
         # report
         print(f'[{station.name.upper()}]\'s flood score: {None if score is None else score*100}')
         print(f'[{station.name.upper()}] flood status: {status}\n')
+
+    pprint(risk_towns)
 
 if __name__ == '__main__':
     main()
