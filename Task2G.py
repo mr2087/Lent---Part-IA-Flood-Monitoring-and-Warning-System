@@ -24,6 +24,7 @@ def init() -> list[MonitoringStation]:
 
 
 def forecast_water_level_sign(station, short, long) -> None:
+    # get sign of gradient
     print(f"Fetching measure levels for station {station.name} at {station.town} measuring {station.river} ...")
     dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(long))
     if dates == [] or levels == []:
@@ -41,6 +42,7 @@ def forecast_water_level_sign(station, short, long) -> None:
             np.sign(coeff_s if abs(coeff_s) > 0.05 else 0))
 
 def evaluate_flooding(station) -> tuple[float, str]:
+    # 
     frwl_short, frwl_long_mag, frwl_long = forecast_water_level_sign(station, 0.5, 30)
     rwl = station.relative_water_level()
 
@@ -75,7 +77,7 @@ def evaluate_flooding(station) -> tuple[float, str]:
 
     return score, status
 
-def main() -> None:
+def test_main() -> None:
     stations = init()
     print("initial setup complete")
 
@@ -86,6 +88,9 @@ def main() -> None:
     risk_towns = []
 
     for station in risk_stations: # stations[340:355]:
+        if station.name != 'Trowlock Island':
+            continue
+
         score, status = evaluate_flooding(station)
 
         risk_towns.append((station.town, status))
@@ -97,4 +102,4 @@ def main() -> None:
     pprint(risk_towns)
 
 if __name__ == '__main__':
-    main()
+    test_main()
