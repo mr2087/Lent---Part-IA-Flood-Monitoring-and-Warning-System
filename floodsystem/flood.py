@@ -1,29 +1,46 @@
 from .station import MonitoringStation
+from .debug import Debug
+debug_util = Debug('log/a.txt')
+import numpy as np
 
-from math import inf
-
-def stations_level_over_threshold(stations : list[MonitoringStation], tol):
-    stations_over_threshold : list = []
+# Task2B (2)
+def stations_level_over_threshold(
+    stations: list[MonitoringStation], 
+    tol):
     
+    # Create list for the tuples
+    result = []
+
+    # Loop through each station
     for station in stations:
-        relative_water_level = station.relative_water_level()
+        level = station.relative_water_level()
+        # Add tuples to list
+        if level is not None and level > tol:
+            result.append((station, level))
 
-        # prophylactic comment: equivalent to `relative_water_level == None` 
-        if relative_water_level == None:
-            continue
+    # Sort list by relative level in descending order
+    result.sort(key=lambda x: x[1], reverse=True)
 
-        if relative_water_level > tol:
-            stations_over_threshold.append((station, relative_water_level))
+    return result
 
-    stations_over_threshold = sorted(stations_over_threshold, key=lambda x: x[1], reverse = True)
+# Task2C
+def stations_highest_rel_level(
+    stations: list[MonitoringStation],
+    N):
 
-    return stations_over_threshold
-
-def stations_highest_rel_level(stations, N):
-    # get all stations, sorted by relative water level in descending order
-    # all error checking is done by stations_level_over_threshold function
-
-    # UT: check that all stations are accounted for in the output below
-    stations_sorted = stations_level_over_threshold(stations, -inf)
+    # Create list
+    result = []
     
-    return stations_sorted[:N]
+    # Loop through each station
+    for station in stations:
+        level = station.relative_water_level()
+        if level is not None:
+            result.append((station, level))
+
+    # Sort list by relative level in descending order
+    result.sort(key=lambda x: x[1], reverse=True)
+
+    return result[:N]
+
+
+    

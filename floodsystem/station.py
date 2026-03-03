@@ -49,17 +49,16 @@ class MonitoringStation:
         
         return True
     
-    ### TASK 2B, STILL SUPPOSITIONAL ###
     def relative_water_level(self):
-        # inconsistent data detected in MonitoringStation
-        if not self.typical_range_consistent():
+        # Return none if no latest level recorded
+        if self.latest_level is None:
             return None
-
-        # no data in latest level
-        if self.latest_level == None:
+        # Return none if the typical range is inconsistent
+        if not self.typical_range_consistent():
             return None
         
         low, high = self.typical_range
+        
         return (self.latest_level - low) / (high - low)
     
 def inconsistent_typical_range_stations(

@@ -1,8 +1,33 @@
+import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from floodsystem.analysis import polyfit
 
-from floodsystem.station import MonitoringStation
+def plot_water_level_with_fit(station, dates, levels, p):
 
-from pprint import pprint
+    # Convert datetime objects to floats
+    x = mdates.date2num(dates)
+    
+    poly, d0 = polyfit(dates, levels, p)
+    
+    # Smooth the fitted curve
+    smooth_x = np.linspace(x.min(), x.max(), 200)
 
-def plot_water_levels(station : list[MonitoringStation], dates, levels):
-    pprint(dates, levels)
+    # Shift the smooth x-values
+    x_shifted = smooth_x - d0
+    # Evaluate polynomial
+    smooth_y = poly(x_shifted)
+
+    smooth_dates = mdates.num2date(smooth_x)
+
+    # Plot raw data, add labels and title
+    plt.plot(dates, levels, '.', label="Water level data")
+    plt.plot(smooth_dates, smooth_y, label=f"Polynomial fit: degree {p}")
+
+    plt.xlabel("Date")
+    plt.ylabel("Water level (m)")
+    plt.title(f"Water levels at {station.name}")
+
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
