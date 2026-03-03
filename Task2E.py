@@ -4,6 +4,8 @@ from floodsystem.flood import stations_highest_rel_level
 from floodsystem.datafetcher import fetch_measure_levels
 from floodsystem.stationdata import build_station_list, update_water_levels
 
+from floodsystem.plot import plot_water_level
+
 def main_2E():
     # get updated station list
     stations = build_station_list()
@@ -19,7 +21,10 @@ def main_2E():
         dates, levels = fetch_measure_levels(
             station.measure_id, dt=datetime.timedelta(days=dt))
         
-        
+        if not dates or not levels:
+            print("No data available")
+
+        plot_water_level(station, dates, levels)
 
 if __name__ == '__main__':
     main_2E()

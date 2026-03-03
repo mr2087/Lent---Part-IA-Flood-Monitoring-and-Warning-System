@@ -3,6 +3,27 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from floodsystem.analysis import polyfit
 
+### TASK 2E
+def plot_water_level(station : list, dates : list, levels) -> None:
+    # fdates = mdates.date2num(dates)
+
+    fig, ax = plt.subplot()
+
+    ax.plot(dates, levels, '.', label="Water level data")
+
+        # default styling, may change later
+    # Add axis labels, rotate date labels and add plot title
+    ax.set_xlabel('date')
+    ax.set_ylabel('water level (m)')
+    ax.set_title(f"Station {station.name}")
+
+    plt.xticks(rotation=45)
+
+    # Display plot
+    plt.legend()
+    plt.tight_layout()  # This makes sure plot does not cut off date labels
+    plt.show()
+
 def plot_water_level_with_fit(station, dates, levels, p):
 
     # Convert datetime objects to floats
